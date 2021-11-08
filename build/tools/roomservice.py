@@ -73,7 +73,7 @@ def add_auth(githubreq):
         githubreq.add_header("Authorization","Basic %s" % githubauth)
 
 if not depsonly:
-    githubreq = urllib.request.Request("https://api.github.com/search/repositories?q=%s+user:Nenggala-Project+in:name+fork:true" % device)
+    githubreq = urllib.request.Request("https://api.github.com/search/repositories?q=%s+user:nenggala-project+in:name+fork:true" % device)
     add_auth(githubreq)
     try:
         result = json.loads(urllib.request.urlopen(githubreq).read().decode())
@@ -193,9 +193,9 @@ def add_to_manifest(repositories, fallback_branch = None):
             print('Nenggala/%s already fetched to %s' % (repo_name, repo_target))
             continue
 
-        print('Adding dependency: Nenggala/%s -> %s' % (repo_name, repo_target))
+        print('Adding dependency: nenggala-project/%s -> %s' % (repo_name, repo_target))
         project = ElementTree.Element("project", attrib = { "path": repo_target,
-            "remote": "github", "name": "Nenggala/%s" % repo_name })
+            "remote": "github", "name": "nenggala-project/%s" % repo_name })
 
         if 'branch' in repository:
             project.set('revision',repository['branch'])
@@ -217,7 +217,7 @@ def add_to_manifest(repositories, fallback_branch = None):
 
 def fetch_dependencies(repo_path, fallback_branch = None):
     print('Looking for dependencies in %s' % repo_path)
-    dependencies_path = repo_path + '/lineage.dependencies'
+    dependencies_path = repo_path + '/nenggala.dependencies'
     syncable_repos = []
     verify_repos = []
 
