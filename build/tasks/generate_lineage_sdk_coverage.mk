@@ -18,19 +18,19 @@
 # Makefile for producing lineage sdk coverage reports.
 # Run "make lineage-sdk-test-coverage" in the $ANDROID_BUILD_TOP directory.
 
-lineage_sdk_api_coverage_exe := $(HOST_OUT_EXECUTABLES)/lineage-sdk-api-coverage
+lineage_sdk_api_coverage_exe := $(HOST_OUT_EXECUTABLES)/nenggala-sdk-api-coverage
 dexdeps_exe := $(HOST_OUT_EXECUTABLES)/dexdeps
 
-coverage_out := $(HOST_OUT)/lineage-sdk-api-coverage
+coverage_out := $(HOST_OUT)/nenggala-sdk-api-coverage
 
-api_text_description := lineage-sdk/api/lineage_current.txt
+api_text_description := nenggala-sdk/api/nenggala_current.txt
 api_xml_description := $(coverage_out)/api.xml
 $(api_xml_description) : $(api_text_description) $(APICHECK)
 	$(hide) echo "Converting API file to XML: $@"
 	$(hide) mkdir -p $(dir $@)
 	$(hide) $(APICHECK_COMMAND) -convert2xml $< $@
 
-lineage-sdk-test-coverage-report := $(coverage_out)/lineage-sdk-test-coverage.html
+lineage-sdk-test-coverage-report := $(coverage_out)/nenggala-sdk-test-coverage.html
 
 lineage_sdk_tests_apk := $(call intermediates-dir-for,APPS,LineagePlatformTests)/package.apk
 lineagesettingsprovider_tests_apk := $(call intermediates-dir-for,APPS,LineageSettingsProviderTests)/package.apk
@@ -41,7 +41,7 @@ $(lineage-sdk-test-coverage-report): PRIVATE_NENGGALA_SDK_API_COVERAGE_EXE := $(
 $(lineage-sdk-test-coverage-report): PRIVATE_DEXDEPS_EXE := $(dexdeps_exe)
 $(lineage-sdk-test-coverage-report): PRIVATE_API_XML_DESC := $(api_xml_description)
 $(lineage-sdk-test-coverage-report): $(lineage_sdk_tests_apk) $(lineagesettingsprovider_tests_apk) $(lineage_sdk_api_coverage_dependencies) | $(ACP)
-	$(call generate-lineage-coverage-report,"LINEAGE-SDK API Coverage Report",\
+	$(call generate-lineage-coverage-report,"NENGGALA-SDK API Coverage Report",\
 			$(PRIVATE_TEST_CASES),html)
 
 .PHONY: lineage-sdk-test-coverage
@@ -49,7 +49,7 @@ lineage-sdk-test-coverage : $(lineage-sdk-test-coverage-report)
 
 # Put the test coverage report in the dist dir if "lineage-sdk" is among the build goals.
 ifneq ($(filter lineage-sdk, $(MAKECMDGOALS)),)
-  $(call dist-for-goals, lineage-sdk, $(lineage-sdk-test-coverage-report):lineage-sdk-test-coverage-report.html)
+  $(call dist-for-goals, lineage-sdk, $(lineage-sdk-test-coverage-report):nenggala-sdk-test-coverage-report.html)
 endif
 
 # Arguments;
