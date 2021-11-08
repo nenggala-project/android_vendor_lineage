@@ -79,7 +79,7 @@ include vendor/nenggala/config/aosp_audio.mk
 # Include Lineage audio files
 include vendor/nenggala/config/lineage_audio.mk
 
-ifneq ($(TARGET_DISABLE_LINEAGE_SDK), true)
+ifneq ($(TARGET_DISABLE_NENGGALA_SDK), true)
 # Lineage SDK
 include vendor/nenggala/config/lineage_sdk_common.mk
 endif
@@ -212,34 +212,34 @@ endif
 
 ifdef NENGGALA_BUILDTYPE
     ifneq ($(NENGGALA_BUILDTYPE), SNAPSHOT)
-        ifdef LINEAGE_EXTRAVERSION
+        ifdef NENGGALA_EXTRAVERSION
             # Force build type to EXPERIMENTAL
             NENGGALA_BUILDTYPE := EXPERIMENTAL
-            # Remove leading dash from LINEAGE_EXTRAVERSION
-            LINEAGE_EXTRAVERSION := $(shell echo $(LINEAGE_EXTRAVERSION) | sed 's/-//')
-            # Add leading dash to LINEAGE_EXTRAVERSION
-            LINEAGE_EXTRAVERSION := -$(LINEAGE_EXTRAVERSION)
+            # Remove leading dash from NENGGALA_EXTRAVERSION
+            NENGGALA_EXTRAVERSION := $(shell echo $(NENGGALA_EXTRAVERSION) | sed 's/-//')
+            # Add leading dash to NENGGALA_EXTRAVERSION
+            NENGGALA_EXTRAVERSION := -$(NENGGALA_EXTRAVERSION)
         endif
     else
-        ifndef LINEAGE_EXTRAVERSION
+        ifndef NENGGALA_EXTRAVERSION
             # Force build type to EXPERIMENTAL, SNAPSHOT mandates a tag
             NENGGALA_BUILDTYPE := EXPERIMENTAL
         else
-            # Remove leading dash from LINEAGE_EXTRAVERSION
-            LINEAGE_EXTRAVERSION := $(shell echo $(LINEAGE_EXTRAVERSION) | sed 's/-//')
-            # Add leading dash to LINEAGE_EXTRAVERSION
-            LINEAGE_EXTRAVERSION := -$(LINEAGE_EXTRAVERSION)
+            # Remove leading dash from NENGGALA_EXTRAVERSION
+            NENGGALA_EXTRAVERSION := $(shell echo $(NENGGALA_EXTRAVERSION) | sed 's/-//')
+            # Add leading dash to NENGGALA_EXTRAVERSION
+            NENGGALA_EXTRAVERSION := -$(NENGGALA_EXTRAVERSION)
         endif
     endif
 else
     # If NENGGALA_BUILDTYPE is not defined, set to UNOFFICIAL
     NENGGALA_BUILDTYPE := UNOFFICIAL
-    LINEAGE_EXTRAVERSION :=
+    NENGGALA_EXTRAVERSION :=
 endif
 
 ifeq ($(NENGGALA_BUILDTYPE), UNOFFICIAL)
     ifneq ($(TARGET_UNOFFICIAL_BUILD_ID),)
-        LINEAGE_EXTRAVERSION := -$(TARGET_UNOFFICIAL_BUILD_ID)
+        NENGGALA_EXTRAVERSION := -$(TARGET_UNOFFICIAL_BUILD_ID)
     endif
 endif
 
@@ -260,15 +260,15 @@ ifeq ($(NENGGALA_BUILDTYPE), RELEASE)
 else
     ifeq ($(NENGGALA_VERSION_MAINTENANCE),0)
         ifeq ($(NENGGALA_VERSION_APPEND_TIME_OF_DAY),true)
-            NENGGALA_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(shell date -u +%Y%m%d_%H%M%S)-$(NENGGALA_BUILDTYPE)$(LINEAGE_EXTRAVERSION)-$(NENGGALA_BUILD)
+            NENGGALA_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(shell date -u +%Y%m%d_%H%M%S)-$(NENGGALA_BUILDTYPE)$(NENGGALA_EXTRAVERSION)-$(NENGGALA_BUILD)
         else
-            NENGGALA_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(shell date -u +%Y%m%d)-$(NENGGALA_BUILDTYPE)$(LINEAGE_EXTRAVERSION)-$(NENGGALA_BUILD)
+            NENGGALA_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(shell date -u +%Y%m%d)-$(NENGGALA_BUILDTYPE)$(NENGGALA_EXTRAVERSION)-$(NENGGALA_BUILD)
         endif
     else
         ifeq ($(NENGGALA_VERSION_APPEND_TIME_OF_DAY),true)
-            NENGGALA_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(NENGGALA_VERSION_MAINTENANCE)-$(shell date -u +%Y%m%d_%H%M%S)-$(NENGGALA_BUILDTYPE)$(LINEAGE_EXTRAVERSION)-$(NENGGALA_BUILD)
+            NENGGALA_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(NENGGALA_VERSION_MAINTENANCE)-$(shell date -u +%Y%m%d_%H%M%S)-$(NENGGALA_BUILDTYPE)$(NENGGALA_EXTRAVERSION)-$(NENGGALA_BUILD)
         else
-            NENGGALA_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(NENGGALA_VERSION_MAINTENANCE)-$(shell date -u +%Y%m%d)-$(NENGGALA_BUILDTYPE)$(LINEAGE_EXTRAVERSION)-$(NENGGALA_BUILD)
+            NENGGALA_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(NENGGALA_VERSION_MAINTENANCE)-$(shell date -u +%Y%m%d)-$(NENGGALA_BUILDTYPE)$(NENGGALA_EXTRAVERSION)-$(NENGGALA_BUILD)
         endif
     endif
 endif
@@ -278,16 +278,16 @@ PRODUCT_EXTRA_RECOVERY_KEYS += \
 
 -include vendor/nenggala-priv/keys/keys.mk
 
-LINEAGE_DISPLAY_VERSION := $(NENGGALA_VERSION)
+NENGGALA_DISPLAY_VERSION := $(NENGGALA_VERSION)
 
 ifneq ($(PRODUCT_DEFAULT_DEV_CERTIFICATE),)
 ifneq ($(PRODUCT_DEFAULT_DEV_CERTIFICATE),build/target/product/security/testkey)
     ifneq ($(NENGGALA_BUILDTYPE), UNOFFICIAL)
         ifndef TARGET_VENDOR_RELEASE_BUILD_ID
-            ifneq ($(LINEAGE_EXTRAVERSION),)
-                # Remove leading dash from LINEAGE_EXTRAVERSION
-                LINEAGE_EXTRAVERSION := $(shell echo $(LINEAGE_EXTRAVERSION) | sed 's/-//')
-                TARGET_VENDOR_RELEASE_BUILD_ID := $(LINEAGE_EXTRAVERSION)
+            ifneq ($(NENGGALA_EXTRAVERSION),)
+                # Remove leading dash from NENGGALA_EXTRAVERSION
+                NENGGALA_EXTRAVERSION := $(shell echo $(NENGGALA_EXTRAVERSION) | sed 's/-//')
+                TARGET_VENDOR_RELEASE_BUILD_ID := $(NENGGALA_EXTRAVERSION)
             else
                 TARGET_VENDOR_RELEASE_BUILD_ID := $(shell date -u +%Y%m%d)
             endif
@@ -295,9 +295,9 @@ ifneq ($(PRODUCT_DEFAULT_DEV_CERTIFICATE),build/target/product/security/testkey)
             TARGET_VENDOR_RELEASE_BUILD_ID := $(TARGET_VENDOR_RELEASE_BUILD_ID)
         endif
         ifeq ($(NENGGALA_VERSION_MAINTENANCE),0)
-            LINEAGE_DISPLAY_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(TARGET_VENDOR_RELEASE_BUILD_ID)-$(NENGGALA_BUILD)
+            NENGGALA_DISPLAY_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(TARGET_VENDOR_RELEASE_BUILD_ID)-$(NENGGALA_BUILD)
         else
-            LINEAGE_DISPLAY_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(NENGGALA_VERSION_MAINTENANCE)-$(TARGET_VENDOR_RELEASE_BUILD_ID)-$(NENGGALA_BUILD)
+            NENGGALA_DISPLAY_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR).$(NENGGALA_VERSION_MAINTENANCE)-$(TARGET_VENDOR_RELEASE_BUILD_ID)-$(NENGGALA_BUILD)
         endif
     endif
 endif
