@@ -221,6 +221,7 @@ def add_to_manifest(remote, repositories, fallback_branch = None):
 
 def is_nenggala(repo):
     url = 'https://github.com/nenggala-project/'+repo
+    
     try:
         conn = urllib.request.urlopen(url)
     except urllib.error.HTTPError as e:
@@ -229,6 +230,21 @@ def is_nenggala(repo):
         return False
     else:
         return True
+
+def is_private(repo):
+    url = 'https://github.com/nenggala-project/'+repo
+
+    githubreq = urllib.request.Request('https://github.com/nenggala-project/'+repo)
+    add_auth(githubreq)
+    try:
+        conn = urllib.request.urlopen(githubreq)
+    except urllib.error.HTTPError as e:
+        return False
+    except urllib.error.URLError as e:
+        return False
+    else:
+        return True
+
 
 def fetch_dependencies(repo_path, fallback_branch = None):
     print('Looking for dependencies in %s' % repo_path)
@@ -241,6 +257,7 @@ def fetch_dependencies(repo_path, fallback_branch = None):
         dependencies = json.loads(dependencies_file.read())
         fetch_list = []
         out_list = []
+        priv_list = []
         # cek dulu isinya, ada gak di target path nenggala, kalau gak ada fallback nang lineageos, nek ra ono, mati.
         for dependency in dependencies:
                
@@ -248,7 +265,10 @@ def fetch_dependencies(repo_path, fallback_branch = None):
                 if is_nenggala(dependency['repository']): 
                     fetch_list.append(dependency)
                 else:
-                    out_list.append(dependency)
+                    if is_private(dependency['repository']):
+                        priv_list.append(dependency)
+                    else:
+                        out_list.append(dependency)
                 syncable_repos.append(dependency['target_path'])
                 verify_repos.append(dependency['target_path'])
             else:
@@ -261,8 +281,11 @@ def fetch_dependencies(repo_path, fallback_branch = None):
         if len(fetch_list) > 0:
             print('Adding dependencies to manifest')
             add_to_manifest('github', fetch_list, fallback_branch)
+        if len(priv_list) > 0:
+            print('Adding private dependencies to manifest')
+            add_to_manifest('private', priv_list, fallback_branch)
         if len(out_list) > 0:
-            print('Updating dependencies in manifest')
+            print('Add lineageos dependencies in manifest')
             add_to_manifest('lineage', out_list, fallback_branch)
 
     else:
