@@ -221,7 +221,6 @@ def add_to_manifest(remote, repositories, fallback_branch = None):
 
 def is_nenggala(repo):
     url = 'https://github.com/nenggala-project/'+repo
-    
     try:
         conn = urllib.request.urlopen(url)
     except urllib.error.HTTPError as e:
@@ -232,8 +231,6 @@ def is_nenggala(repo):
         return True
 
 def is_private(repo):
-    url = 'https://github.com/nenggala-project/'+repo
-
     githubreq = urllib.request.Request('https://github.com/nenggala-project/'+repo)
     add_auth(githubreq)
     try:
