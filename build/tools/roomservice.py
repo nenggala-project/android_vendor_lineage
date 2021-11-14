@@ -243,19 +243,18 @@ def fetch_dependencies(repo_path, fallback_branch = None):
         out_list = []
         # cek dulu isinya, ada gak di target path nenggala, kalau gak ada fallback nang lineageos, nek ra ono, mati.
         for dependency in dependencies:
-            if is_nenggala(dependency['repository']):    
-                if not is_in_manifest(dependency['target_path']):
+               
+            if not is_in_manifest(dependency['target_path']):
+                if is_nenggala(dependency['repository']): 
                     fetch_list.append(dependency)
-                    syncable_repos.append(dependency['target_path'])
-                    verify_repos.append(dependency['target_path'])
                 else:
-                    verify_repos.append(dependency['target_path'])
-
-                if not os.path.isdir(dependency['target_path']):
-                    syncable_repos.append(dependency['target_path'])
+                    out_list.append(dependency)
+                syncable_repos.append(dependency['target_path'])
+                verify_repos.append(dependency['target_path'])
             else:
-                out_list.append(dependency)
-
+                verify_repos.append(dependency['target_path'])
+            if not os.path.isdir(dependency['target_path']):
+                syncable_repos.append(dependency['target_path'])
 
         dependencies_file.close()
 
@@ -269,7 +268,7 @@ def fetch_dependencies(repo_path, fallback_branch = None):
     else:
         print('%s has no additional dependencies.' % repo_path)
 
-    if len(syncable_repos) > 0:
+    if len(syncable_repos) > 0: 
         print('Syncing dependencies')
         os.system('repo sync --force-sync %s' % ' '.join(syncable_repos))
 
