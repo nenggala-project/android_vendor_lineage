@@ -178,7 +178,7 @@ def is_in_manifest(projectpath):
 
     return False
 
-def add_to_manifest(remote, repositories, fallback_branch = None):
+def add_to_manifest(remote, name, repositories, fallback_branch = None):
     try:
         lm = ElementTree.parse(".repo/local_manifests/roomservice.xml")
         lm = lm.getroot()
@@ -194,12 +194,8 @@ def add_to_manifest(remote, repositories, fallback_branch = None):
             continue
 
         print('Adding dependency: nenggala-project/%s -> %s' % (repo_name, repo_target))
-        if remote == "github":
-            project = ElementTree.Element("project", attrib = { "path": repo_target,
-                "remote": remote, "name": "nenggala-project/%s" % repo_name })
-        else:
-            project = ElementTree.Element("project", attrib = { "path": repo_target,
-                "remote": remote, "name": "LineageOS/%s" % repo_name })
+        project = ElementTree.Element("project", attrib = { "path": repo_target,
+                "remote": remote, "name": "%s/%s" % (name, repo_name) })
 
         if 'branch' in repository:
             project.set('revision',repository['branch'])
@@ -277,13 +273,13 @@ def fetch_dependencies(repo_path, fallback_branch = None):
 
         if len(fetch_list) > 0:
             print('Adding dependencies to manifest')
-            add_to_manifest('github', fetch_list, fallback_branch)
+            add_to_manifest('github', "nenggala-project", fetch_list, fallback_branch)
         if len(priv_list) > 0:
             print('Adding private dependencies to manifest')
-            add_to_manifest('private', priv_list, fallback_branch)
+            add_to_manifest('private', "nenggala-project", priv_list, fallback_branch)
         if len(out_list) > 0:
             print('Add lineageos dependencies in manifest')
-            add_to_manifest('lineage', out_list, fallback_branch)
+            add_to_manifest('lineage', "LineageOS", out_list, fallback_branch)
 
     else:
         print('%s has no additional dependencies.' % repo_path)
@@ -349,7 +345,7 @@ else:
                     print("Use the ROOMSERVICE_BRANCHES environment variable to specify a list of fallback branches.")
                     sys.exit()
 
-            add_to_manifest('github', [adding], fallback_branch)
+            add_to_manifest('github', "nenggala-project", [adding], fallback_branch)
 
             print("Syncing repository to retrieve project.")
             os.system('repo sync --force-sync %s' % repo_path)
