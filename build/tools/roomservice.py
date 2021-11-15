@@ -23,6 +23,7 @@ import netrc
 import os
 import re
 import sys
+import subprocess
 try:
   # For python3
   import urllib.error
@@ -178,7 +179,7 @@ def is_in_manifest(projectpath):
 
     return False
 
-def add_to_manifest(repositories, fallback_branch = None):
+def add_to_manifest(remote, name, repositories, fallback_branch = None):
     try:
         lm = ElementTree.parse(".repo/local_manifests/roomservice.xml")
         lm = lm.getroot()
@@ -195,7 +196,7 @@ def add_to_manifest(repositories, fallback_branch = None):
 
         print('Adding dependency: nenggala-project/%s -> %s' % (repo_name, repo_target))
         project = ElementTree.Element("project", attrib = { "path": repo_target,
-            "remote": "github", "name": "nenggala-project/%s" % repo_name })
+                "remote": remote, "name": "%s/%s" % (name, repo_name) })
 
         if 'branch' in repository:
             project.set('revision',repository['branch'])
@@ -215,6 +216,25 @@ def add_to_manifest(repositories, fallback_branch = None):
     f.write(raw_xml)
     f.close()
 
+def is_nenggala(repo):
+    url = 'https://github.com/nenggala-project/'+repo
+    try:
+        conn = urllib.request.urlopen(url)
+    except urllib.error.HTTPError as e:
+        return False
+    except urllib.error.URLError as e:
+        return False
+    else:
+        return True
+
+def is_private(repo):
+    process = subprocess.Popen(['git', 'ls-remote', 'git@github.com:nenggala-project/'+repo],stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+    if len(stdout) < 1:
+        return False 
+    return True
+
+
 def fetch_dependencies(repo_path, fallback_branch = None):
     print('Looking for dependencies in %s' % repo_path)
     dependencies_path = repo_path + '/nenggala.dependencies'
@@ -225,15 +245,23 @@ def fetch_dependencies(repo_path, fallback_branch = None):
         dependencies_file = open(dependencies_path, 'r')
         dependencies = json.loads(dependencies_file.read())
         fetch_list = []
-
+        out_list = []
+        priv_list = []
+        # cek dulu isinya, ada gak di target path nenggala, kalau gak ada fallback nang lineageos, nek ra ono, mati.
         for dependency in dependencies:
+               
             if not is_in_manifest(dependency['target_path']):
-                fetch_list.append(dependency)
+                if is_nenggala(dependency['repository']): 
+                    fetch_list.append(dependency)
+                else:
+                    if is_private(dependency['repository']):
+                        priv_list.append(dependency)
+                    else:
+                        out_list.append(dependency)
                 syncable_repos.append(dependency['target_path'])
                 verify_repos.append(dependency['target_path'])
             else:
                 verify_repos.append(dependency['target_path'])
-
             if not os.path.isdir(dependency['target_path']):
                 syncable_repos.append(dependency['target_path'])
 
@@ -241,11 +269,18 @@ def fetch_dependencies(repo_path, fallback_branch = None):
 
         if len(fetch_list) > 0:
             print('Adding dependencies to manifest')
-            add_to_manifest(fetch_list, fallback_branch)
+            add_to_manifest('github', "nenggala-project", fetch_list, fallback_branch)
+        if len(priv_list) > 0:
+            print('Adding private dependencies to manifest')
+            add_to_manifest('private', "nenggala-project", priv_list, fallback_branch)
+        if len(out_list) > 0:
+            print('Add lineageos dependencies in manifest')
+            add_to_manifest('lineage', "LineageOS", out_list, fallback_branch)
+
     else:
         print('%s has no additional dependencies.' % repo_path)
 
-    if len(syncable_repos) > 0:
+    if len(syncable_repos) > 0: 
         print('Syncing dependencies')
         os.system('repo sync --force-sync %s' % ' '.join(syncable_repos))
 
@@ -306,7 +341,7 @@ else:
                     print("Use the ROOMSERVICE_BRANCHES environment variable to specify a list of fallback branches.")
                     sys.exit()
 
-            add_to_manifest([adding], fallback_branch)
+            add_to_manifest('github', "nenggala-project", [adding], fallback_branch)
 
             print("Syncing repository to retrieve project.")
             os.system('repo sync --force-sync %s' % repo_path)
