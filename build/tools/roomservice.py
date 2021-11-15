@@ -23,6 +23,7 @@ import netrc
 import os
 import re
 import sys
+import subprocess
 try:
   # For python3
   import urllib.error
@@ -227,16 +228,11 @@ def is_nenggala(repo):
         return True
 
 def is_private(repo):
-    githubreq = urllib.request.Request('https://github.com/nenggala-project/'+repo)
-    add_auth(githubreq)
-    try:
-        conn = urllib.request.urlopen(githubreq)
-    except urllib.error.HTTPError as e:
-        return False
-    except urllib.error.URLError as e:
-        return False
-    else:
-        return True
+    process = subprocess.Popen(['git', 'ls-remote', 'git@github.com:nenggala-project/'+repo],stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+    if len(stdout) < 1:
+        return False 
+    return True
 
 
 def fetch_dependencies(repo_path, fallback_branch = None):
