@@ -14,8 +14,8 @@
 
 $(call inherit-product, build/target/product/aosp_arm64_ab.mk)
 
-include vendor/nenggala/build/target/product/lineage_generic_target.mk
+include vendor/nenggala/build/target/product/nenggala_generic_target.mk
 
 TARGET_NO_KERNEL_OVERRIDE := true
 
-PRODUCT_NAME := lineage_arm64_ab
+PRODUCT_NAME := nenggala_arm64_ab

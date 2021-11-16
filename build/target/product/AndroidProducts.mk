@@ -15,33 +15,33 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/lineage_arm.mk \
-    $(LOCAL_DIR)/lineage_arm64.mk \
-    $(LOCAL_DIR)/lineage_x86.mk \
-    $(LOCAL_DIR)/lineage_x86_64.mk \
-    $(LOCAL_DIR)/lineage_arm_ab.mk \
-    $(LOCAL_DIR)/lineage_arm64_ab.mk \
-    $(LOCAL_DIR)/lineage_x86_ab.mk \
-    $(LOCAL_DIR)/lineage_x86_64_ab.mk \
-    $(LOCAL_DIR)/lineage_tv_arm.mk \
-    $(LOCAL_DIR)/lineage_tv_arm64.mk \
-    $(LOCAL_DIR)/lineage_tv_x86.mk \
-    $(LOCAL_DIR)/lineage_tv_x86_64.mk \
-    $(LOCAL_DIR)/lineage_car_arm64.mk \
-    $(LOCAL_DIR)/lineage_car_x86_64.mk
+    $(LOCAL_DIR)/nenggala_arm.mk \
+    $(LOCAL_DIR)/nenggala_arm64.mk \
+    $(LOCAL_DIR)/nenggala_x86.mk \
+    $(LOCAL_DIR)/nenggala_x86_64.mk \
+    $(LOCAL_DIR)/nenggala_arm_ab.mk \
+    $(LOCAL_DIR)/nenggala_arm64_ab.mk \
+    $(LOCAL_DIR)/nenggala_x86_ab.mk \
+    $(LOCAL_DIR)/nenggala_x86_64_ab.mk \
+    $(LOCAL_DIR)/nenggala_tv_arm.mk \
+    $(LOCAL_DIR)/nenggala_tv_arm64.mk \
+    $(LOCAL_DIR)/nenggala_tv_x86.mk \
+    $(LOCAL_DIR)/nenggala_tv_x86_64.mk \
+    $(LOCAL_DIR)/nenggala_car_arm64.mk \
+    $(LOCAL_DIR)/nenggala_car_x86_64.mk
 
 COMMON_LUNCH_CHOICES := \
-    lineage_arm-userdebug \
-    lineage_arm64-userdebug \
-    lineage_x86-userdebug \
-    lineage_x86_64-userdebug \
-    lineage_arm_ab-userdebug \
-    lineage_arm64_ab-userdebug \
-    lineage_x86_ab-userdebug \
-    lineage_x86_64_ab-userdebug \
-    lineage_tv_arm-userdebug \
-    lineage_tv_arm64-userdebug \
-    lineage_tv_x86-userdebug \
-    lineage_tv_x86_64-userdebug \
-    lineage_car_arm64-userdebug \
-    lineage_car_x86_64-userdebug
+    nenggala_arm-userdebug \
+    nenggala_arm64-userdebug \
+    nenggala_x86-userdebug \
+    nenggala_x86_64-userdebug \
+    nenggala_arm_ab-userdebug \
+    nenggala_arm64_ab-userdebug \
+    nenggala_x86_ab-userdebug \
+    nenggala_x86_64_ab-userdebug \
+    nenggala_tv_arm-userdebug \
+    nenggala_tv_arm64-userdebug \
+    nenggala_tv_x86-userdebug \
+    nenggala_tv_x86_64-userdebug \
+    nenggala_car_arm64-userdebug \
+    nenggala_car_x86_64-userdebug

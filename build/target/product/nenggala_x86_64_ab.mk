@@ -14,8 +14,8 @@
 
 $(call inherit-product, build/target/product/aosp_x86_64_ab.mk)
 
-include vendor/nenggala/build/target/product/lineage_generic_target.mk
+include vendor/nenggala/build/target/product/nenggala_generic_target.mk
 
-PRODUCT_NAME := lineage_x86_64_ab
+PRODUCT_NAME := nenggala_x86_64_ab
 
 PRODUCT_SDK_ADDON_SYS_IMG_SOURCE_PROP := $(LOCAL_PATH)/source.properties

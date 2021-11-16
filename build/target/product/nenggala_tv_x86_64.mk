@@ -14,9 +14,9 @@
 
 $(call inherit-product, device/google/atv/products/aosp_tv_x86_64.mk)
 
-include vendor/nenggala/build/target/product/lineage_generic_tv_target.mk
+include vendor/nenggala/build/target/product/nenggala_generic_tv_target.mk
 
-PRODUCT_NAME := lineage_tv_x86_64
+PRODUCT_NAME := nenggala_tv_x86_64
 
 PRODUCT_ENFORCE_ARTIFACT_PATH_REQUIREMENTS :=
 

@@ -13,9 +13,9 @@
 # limitations under the License.
 
 $(call inherit-product, build/target/product/aosp_arm_ab.mk)
-include vendor/nenggala/build/target/product/lineage_generic_target.mk
+include vendor/nenggala/build/target/product/nenggala_generic_target.mk
 
 TARGET_NO_KERNEL_OVERRIDE := true
 TARGET_USES_64_BIT_BINDER := true
 
-PRODUCT_NAME := lineage_arm_ab
+PRODUCT_NAME := nenggala_arm_ab
