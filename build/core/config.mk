@@ -14,10 +14,10 @@
 # limitations under the License.
 
 LINEAGE_SRC_API_DIR := $(TOPDIR)prebuilts/lineage-sdk/api
-INTERNAL_LINEAGE_PLATFORM_API_FILE := $(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/lineage_public_api.txt
-INTERNAL_LINEAGE_PLATFORM_REMOVED_API_FILE := $(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/lineage_removed.txt
-FRAMEWORK_LINEAGE_PLATFORM_API_FILE := $(TOPDIR)lineage-sdk/api/lineage_current.txt
-FRAMEWORK_LINEAGE_PLATFORM_REMOVED_API_FILE := $(TOPDIR)lineage-sdk/api/lineage_removed.txt
+INTERNAL_LINEAGE_PLATFORM_API_FILE := $(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/nenggala_public_api.txt
+INTERNAL_LINEAGE_PLATFORM_REMOVED_API_FILE := $(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/nenggala_removed.txt
+FRAMEWORK_LINEAGE_PLATFORM_API_FILE := $(TOPDIR)nenggala-sdk/api/nenggala_current.txt
+FRAMEWORK_LINEAGE_PLATFORM_REMOVED_API_FILE := $(TOPDIR)nenggala-sdk/api/nenggala_removed.txt
 FRAMEWORK_LINEAGE_API_NEEDS_UPDATE_TEXT := $(TOPDIR)vendor/nenggala/build/core/apicheck_msg_current.txt
 
 # Rules for QCOM targets

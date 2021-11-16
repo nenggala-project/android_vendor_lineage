@@ -77,11 +77,11 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
 include vendor/nenggala/config/aosp_audio.mk
 
 # Include Lineage audio files
-include vendor/nenggala/config/lineage_audio.mk
+include vendor/nenggala/config/nenggala_audio.mk
 
 ifneq ($(TARGET_DISABLE_LINEAGE_SDK), true)
 # Lineage SDK
-include vendor/nenggala/config/lineage_sdk_common.mk
+include vendor/nenggala/config/nenggala_sdk_common.mk
 endif
 
 # TWRP
