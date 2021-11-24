@@ -10,7 +10,7 @@ ADDITIONAL_BUILD_PROPERTIES += \
     ro.nenggala.releasetype=$(LINEAGE_BUILDTYPE) \
     ro.nenggala.build.version=$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR) \
     ro.modversion=$(LINEAGE_VERSION) \
-    ro.nenggalalegal.url=https://lineageos.org/legal
+    ro.nenggalalegal.url=https://nenggala-project.id/legal
 
 # LineageOS Platform Display Version
 ADDITIONAL_BUILD_PROPERTIES += \
