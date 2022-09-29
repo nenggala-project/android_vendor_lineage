@@ -275,7 +275,7 @@ def fetch_dependencies(repo_path, fallback_branch = None):
             add_to_manifest('private', "nenggala-project", priv_list, fallback_branch)
         if len(out_list) > 0:
             print('Add lineageos dependencies in manifest')
-            add_to_manifest('lineage', "LineageOS", out_list, fallback_branch)
+            add_to_manifest('github', "LineageOS", out_list, fallback_branch)
 
     else:
         print('%s has no additional dependencies.' % repo_path)
@@ -341,7 +341,7 @@ else:
                     print("Use the ROOMSERVICE_BRANCHES environment variable to specify a list of fallback branches.")
                     sys.exit()
 
-            add_to_manifest('github', "nenggala-project", [adding], fallback_branch)
+            add_to_manifest('nenggala', "nenggala-project", [adding], fallback_branch)
 
             print("Syncing repository to retrieve project.")
             os.system('repo sync --force-sync %s' % repo_path)
