@@ -269,7 +269,7 @@ def fetch_dependencies(repo_path, fallback_branch = None):
 
         if len(fetch_list) > 0:
             print('Adding dependencies to manifest')
-            add_to_manifest('github', "nenggala-project", fetch_list, fallback_branch)
+            add_to_manifest('nenggala', "nenggala-project", fetch_list, fallback_branch)
         if len(priv_list) > 0:
             print('Adding private dependencies to manifest')
             add_to_manifest('private', "nenggala-project", priv_list, fallback_branch)
