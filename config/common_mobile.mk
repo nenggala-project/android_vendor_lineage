@@ -41,7 +41,7 @@ PRODUCT_PACKAGES += \
 
 ifneq ($(WITH_LINEAGE_CHARGER),false)
 PRODUCT_PACKAGES += \
-    lineage_charger_animation
+    nenggala_charger_animation
 endif
 
 # Customizations
