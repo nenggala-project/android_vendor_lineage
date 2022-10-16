@@ -6,20 +6,20 @@ endif
 
 # LineageOS System Version
 ADDITIONAL_SYSTEM_PROPERTIES += \
-    ro.lineage.version=$(LINEAGE_VERSION) \
-    ro.lineage.releasetype=$(LINEAGE_BUILDTYPE) \
-    ro.lineage.build.version=$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR) \
+    ro.nenggala.version=$(LINEAGE_VERSION) \
+    ro.nenggala.releasetype=$(LINEAGE_BUILDTYPE) \
+    ro.nenggala.build.version=$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR) \
     ro.modversion=$(LINEAGE_VERSION) \
-    ro.lineagelegal.url=https://lineageos.org/legal
+    ro.nenggalalegal.url=https://nenggala-project.id/legal
 
 # LineageOS Platform Display Version
 ADDITIONAL_SYSTEM_PROPERTIES += \
-    ro.lineage.display.version=$(LINEAGE_DISPLAY_VERSION)
+    ro.nenggala.display.version=$(LINEAGE_DISPLAY_VERSION)
 
 # LineageOS Platform SDK Version
 ADDITIONAL_SYSTEM_PROPERTIES += \
-    ro.lineage.build.version.plat.sdk=$(LINEAGE_PLATFORM_SDK_VERSION)
+    ro.nenggala.build.version.plat.sdk=$(LINEAGE_PLATFORM_SDK_VERSION)
 
 # LineageOS Platform Internal Version
 ADDITIONAL_SYSTEM_PROPERTIES += \
-    ro.lineage.build.version.plat.rev=$(LINEAGE_PLATFORM_REV)
+    ro.nenggala.build.version.plat.rev=$(LINEAGE_PLATFORM_REV)

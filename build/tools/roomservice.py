@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Copyright (C) 2012-2013, The CyanogenMod Project
 #           (C) 2017-2018,2020-2021, The LineageOS Project
+#           (C) 2021, The Nenggala Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,6 +23,7 @@ import netrc
 import os
 import re
 import sys
+import subprocess
 try:
   # For python3
   import urllib.error
@@ -52,7 +54,7 @@ except:
     device = product
 
 if not depsonly:
-    print("Device %s not found. Attempting to retrieve device repository from LineageOS Github (http://github.com/LineageOS)." % device)
+    print("Device %s not found. Attempting to retrieve device repository from Nenggala Github (http://github.com/nenggala-project)." % device)
 
 repositories = []
 
@@ -72,7 +74,7 @@ def add_auth(githubreq):
         githubreq.add_header("Authorization","Basic %s" % githubauth)
 
 if not depsonly:
-    githubreq = urllib.request.Request("https://api.github.com/search/repositories?q=%s+user:LineageOS+in:name+fork:true" % device)
+    githubreq = urllib.request.Request("https://api.github.com/search/repositories?q=%s+user:nenggala-project+in:name+fork:true" % device)
     add_auth(githubreq)
     try:
         result = json.loads(urllib.request.urlopen(githubreq).read().decode())
@@ -177,7 +179,7 @@ def is_in_manifest(projectpath):
 
     return False
 
-def add_to_manifest(repositories, fallback_branch = None):
+def add_to_manifest(remote, name, repositories, fallback_branch = None):
     try:
         lm = ElementTree.parse(".repo/local_manifests/roomservice.xml")
         lm = lm.getroot()
@@ -189,12 +191,12 @@ def add_to_manifest(repositories, fallback_branch = None):
         repo_target = repository['target_path']
         print('Checking if %s is fetched from %s' % (repo_target, repo_name))
         if is_in_manifest(repo_target):
-            print('LineageOS/%s already fetched to %s' % (repo_name, repo_target))
+            print('Nenggala/%s already fetched to %s' % (repo_name, repo_target))
             continue
 
-        print('Adding dependency: LineageOS/%s -> %s' % (repo_name, repo_target))
+        print('Adding dependency: nenggala-project/%s -> %s' % (repo_name, repo_target))
         project = ElementTree.Element("project", attrib = { "path": repo_target,
-            "remote": "github", "name": "LineageOS/%s" % repo_name })
+                "remote": remote, "name": "%s/%s" % (name, repo_name) })
 
         if 'branch' in repository:
             project.set('revision',repository['branch'])
@@ -214,9 +216,28 @@ def add_to_manifest(repositories, fallback_branch = None):
     f.write(raw_xml)
     f.close()
 
+def is_nenggala(repo):
+    url = 'https://github.com/nenggala-project/'+repo
+    try:
+        conn = urllib.request.urlopen(url)
+    except urllib.error.HTTPError as e:
+        return False
+    except urllib.error.URLError as e:
+        return False
+    else:
+        return True
+
+def is_private(repo):
+    process = subprocess.Popen(['git', 'ls-remote', 'git@github.com:nenggala-project/'+repo],stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+    if len(stdout) < 1:
+        return False 
+    return True
+
+
 def fetch_dependencies(repo_path, fallback_branch = None):
     print('Looking for dependencies in %s' % repo_path)
-    dependencies_path = repo_path + '/lineage.dependencies'
+    dependencies_path = repo_path + '/nenggala.dependencies'
     syncable_repos = []
     verify_repos = []
 
@@ -224,15 +245,23 @@ def fetch_dependencies(repo_path, fallback_branch = None):
         dependencies_file = open(dependencies_path, 'r')
         dependencies = json.loads(dependencies_file.read())
         fetch_list = []
-
+        out_list = []
+        priv_list = []
+        # cek dulu isinya, ada gak di target path nenggala, kalau gak ada fallback nang lineageos, nek ra ono, mati.
         for dependency in dependencies:
+               
             if not is_in_manifest(dependency['target_path']):
-                fetch_list.append(dependency)
+                if is_nenggala(dependency['repository']): 
+                    fetch_list.append(dependency)
+                else:
+                    if is_private(dependency['repository']):
+                        priv_list.append(dependency)
+                    else:
+                        out_list.append(dependency)
                 syncable_repos.append(dependency['target_path'])
                 verify_repos.append(dependency['target_path'])
             else:
                 verify_repos.append(dependency['target_path'])
-
             if not os.path.isdir(dependency['target_path']):
                 syncable_repos.append(dependency['target_path'])
 
@@ -240,11 +269,18 @@ def fetch_dependencies(repo_path, fallback_branch = None):
 
         if len(fetch_list) > 0:
             print('Adding dependencies to manifest')
-            add_to_manifest(fetch_list, fallback_branch)
+            add_to_manifest('nenggala', "nenggala-project", fetch_list, fallback_branch)
+        if len(priv_list) > 0:
+            print('Adding private dependencies to manifest')
+            add_to_manifest('private', "nenggala-project", priv_list, fallback_branch)
+        if len(out_list) > 0:
+            print('Add lineageos dependencies in manifest')
+            add_to_manifest('github', "LineageOS", out_list, fallback_branch)
+
     else:
         print('%s has no additional dependencies.' % repo_path)
 
-    if len(syncable_repos) > 0:
+    if len(syncable_repos) > 0: 
         print('Syncing dependencies')
         os.system('repo sync --force-sync %s' % ' '.join(syncable_repos))
 
@@ -305,7 +341,7 @@ else:
                     print("Use the ROOMSERVICE_BRANCHES environment variable to specify a list of fallback branches.")
                     sys.exit()
 
-            add_to_manifest([adding], fallback_branch)
+            add_to_manifest('nenggala', "nenggala-project", [adding], fallback_branch)
 
             print("Syncing repository to retrieve project.")
             os.system('repo sync --force-sync %s' % repo_path)
@@ -315,4 +351,4 @@ else:
             print("Done")
             sys.exit()
 
-print("Repository for %s not found in the LineageOS Github repository list. If this is in error, you may need to manually add it to your local_manifests/roomservice.xml." % device)
+print("Repository for %s not found in the Nenggala-Project Github repository list. If this is in error, you may need to manually add it to your local_manifests/roomservice.xml." % device)
