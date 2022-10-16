@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Copyright (C) 2012-2013, The CyanogenMod Project
 #           (C) 2017-2018,2020-2021, The LineageOS Project
-#           (C) 2021, The Nenggala Project
+#           (C) 2022 The Nenggala Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -129,7 +129,9 @@ def get_default_revision():
     m = ElementTree.parse(get_manifest_path())
     d = m.findall('default')[0]
     r = d.get('revision')
-    return r.replace('refs/heads/', '').replace('refs/tags/', '')
+    #return r.replace('refs/heads/', '').replace('refs/tags/', '')
+    return '12.1'
+
 
 def get_from_manifest(devicename):
     try:
