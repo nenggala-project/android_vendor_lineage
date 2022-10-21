@@ -37,8 +37,8 @@ $(TARGET_GENERATED_BOOTANIMATION): $(SOONG_ZIP)
 	for part_cnt in 0 1 2 3 4; do \
 	    mkdir -p $(INTERMEDIATES)/part$$part_cnt; \
 	done; \
-	prebuilts/tools-lineage/${HOST_OS}-x86/bin/mogrify -resize $$RESOLUTION -colors 250 $(INTERMEDIATES)/*/*.png; \
-	echo "1080 1920 60" > $(INTERMEDIATES)/desc.txt; \
+	prebuilts/tools-lineage/${HOST_OS}-x86/bin/mogrify -resize 1080x1920 -colors 250 $(INTERMEDIATES)/*/*.png; \
+	echo "1080 1920 30" > $(INTERMEDIATES)/desc.txt; \
 	cat vendor/nenggala/bootanimation/desc.txt >> $(INTERMEDIATES)/desc.txt
 	$(hide) $(SOONG_ZIP) -L 0 -o $(TARGET_GENERATED_BOOTANIMATION) -C $(INTERMEDIATES) -D $(INTERMEDIATES)
 
@@ -49,18 +49,9 @@ endif
 include $(CLEAR_VARS)
 LOCAL_MODULE := bootanimation.zip
 LOCAL_MODULE_CLASS := ETC
-LOCAL_MODULE_PATH := $(TARGET_OUT_PRODUCT)/media
+LOCAL_MODULE_PATH := $(TARGET_OUT)/media
 
 include $(BUILD_SYSTEM)/base_rules.mk
 
 $(LOCAL_BUILT_MODULE): $(TARGET_BOOTANIMATION)
 	@cp $(TARGET_BOOTANIMATION) $@
-
-include $(CLEAR_VARS)
-
-BOOTANIMATION_SYMLINK := $(TARGET_OUT_PRODUCT)/media/bootanimation-dark.zip
-$(BOOTANIMATION_SYMLINK): $(LOCAL_INSTALLED_MODULE)
-	@mkdir -p $(dir $@)
-	$(hide) ln -sf bootanimation.zip $@
-
-ALL_DEFAULT_INSTALLED_MODULES += $(BOOTANIMATION_SYMLINK)
